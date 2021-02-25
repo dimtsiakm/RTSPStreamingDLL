@@ -25,7 +25,6 @@ struct sdecoded_frame {
 	int linesize;
 	int width;
 	int height;
-	int fps;
 };
 class LiveStreamingCore
 {
