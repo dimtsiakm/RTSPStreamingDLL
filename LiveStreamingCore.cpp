@@ -56,7 +56,6 @@ sdimension* LiveStreamingCore::init() {
     picture_buf2 = (uint8_t*)(av_malloc(size2));
     avpicture_fill((AVPicture*)pic, picture_buf, AV_PIX_FMT_YUV420P, ccontext->width, ccontext->height);
     avpicture_fill((AVPicture*)picrgb, picture_buf2, AV_PIX_FMT_RGB24, ccontext->width, ccontext->height);
-
     frame_export = (sdecoded_frame*)malloc(sizeof(sdecoded_frame));
 
 	return s;
@@ -99,8 +98,6 @@ int LiveStreamingCore::close() {
     av_read_pause(context);
     avio_close(oc->pb);
     avformat_free_context(oc);
-
     free(frame_export);
-
     return 0;
 }
