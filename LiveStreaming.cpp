@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "LiveStreaming.h"
 
-__declspec(dllexport) sdimension* init(void) 
+__declspec(dllexport) svideoparams* init(char* filename)
 {
 	lsc = new LiveStreamingCore();
-	return lsc->init();
+	return lsc->init(filename);
 }
 
 __declspec(dllexport) sdecoded_frame* live_streaming(void)

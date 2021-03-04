@@ -157,6 +157,9 @@
       <AdditionalLibraryDirectories>D:\1. Projects\2. Visual Studio\rtmp2image.Receiver\ffmpeg\lib;D:\1. Projects\2. Visual Studio\rtmp2image.Receiver\SDL2\lib\x64;</AdditionalLibraryDirectories>
       <AdditionalDependencies>avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "D:\1. Projects\2. Visual Studio\rtmp2image.Receiver\x64\Release\RTStreaming.dll" "D:\1. Projects\1. Unity\3. HololensDronePosition\HololensDronePosition\Assets\Plugins\" /s /i /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />

@@ -1,40 +1,37 @@
 #include "pch.h"
 #include "LiveStreamingCore.h"
 
-sdimension* LiveStreamingCore::init() {
+svideoparams* LiveStreamingCore::init(char* filename) {
     c = NULL;
     c = avcodec_find_decoder(AV_CODEC_ID_H264);
-    if (!c) exit(1);
+    if (!c) return 0;
     
     context = avformat_alloc_context();
     ccontext = avcodec_alloc_context3(c);
 
     av_register_all();
     avformat_network_init();
-
-    if (avformat_open_input(&context, "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov", NULL, NULL) != 0) {
+    if (avformat_open_input(&context, filename, NULL, NULL) != 0) {
         return 0;
     }
     if (avformat_find_stream_info(context, NULL) < 0) {
         return 0;
     }
-    //search video stream
     for (int i = 0; i < context->nb_streams; i++) {
         if (context->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO)
             video_stream_index = i;
     }  
     av_init_packet(&packet);
-
     oc = avformat_alloc_context();
-
     stream = NULL;
     
-    //start reading packets from stream and write them to file
     av_read_play(context);//play RTSP
 
     codec = NULL;
     codec = avcodec_find_decoder(AV_CODEC_ID_H264);
-    if (!codec) exit(1);
+    if (!codec) {
+        return 0;
+    }
 
     avcodec_get_context_defaults3(ccontext, codec);
     avcodec_copy_context(ccontext, context->streams[video_stream_index]->codec);
@@ -44,9 +41,10 @@ sdimension* LiveStreamingCore::init() {
     img_convert_ctx = sws_getContext(ccontext->width, ccontext->height, ccontext->pix_fmt, ccontext->width, ccontext->height,
         AV_PIX_FMT_RGB24, SWS_BICUBIC, NULL, NULL, NULL);
 
-    sdimension* s = new sdimension;
+    svideoparams* s = new svideoparams;
     s->height = ccontext->height;
     s->width = ccontext->width;
+    s->fps = av_q2d(context->streams[video_stream_index]->r_frame_rate);
 
     int size = avpicture_get_size(AV_PIX_FMT_YUV420P, ccontext->width, ccontext->height);
     picture_buf = (uint8_t*)(av_malloc(size));

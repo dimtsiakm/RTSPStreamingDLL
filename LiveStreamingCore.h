@@ -16,9 +16,10 @@ extern "C"
 
 using namespace std;
 
-struct sdimension {
+struct svideoparams {
 	int width;
 	int height;
+	double fps;
 };
 struct sdecoded_frame {
 	uint8_t* data; //data as rgb or yuv format; set the dependencies
@@ -29,7 +30,8 @@ struct sdecoded_frame {
 class LiveStreamingCore
 {
 	public:
-		sdimension* init();
+		svideoparams* init(char* filename);
+		int init_debug();
 		sdecoded_frame* live_streaming();
 		int close();
 
